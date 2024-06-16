@@ -6,6 +6,6 @@ async def read_file(filename):
         return await f.read()
 
 
-async def save_file(filename, content):
+async def save_file(filename: str, content: object) -> object:
     async with open(file=filename, mode="a") as f:
-        await f.writelines(content+'\n')
+        await f.write(content+'\n')
