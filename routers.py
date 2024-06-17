@@ -26,43 +26,36 @@ async def upload_phonebook(file: UploadFile):
     return read_file(file.filename)
 
 
-@phonebook_router_v1.get("/api/v1/{user_id}")
-async def get_list_phonebooks(user_id: int):
-    pass
-    return
-
-
-@phonebook_router_v1.get("/api/v1/{user_id}/"
-                         "{phonebook_id}/contacts")
-async def get_contact_phonebook(user_id: int, phonebook_id: int):
-    return
+@phonebook_router_v1.get("/api/v1/{user_id}/{phonebook_id}/contacts")
+async def get_phonebook(user_id, phonebook_id):
+    return Phonebook(user_id=user_id, phonebook_id=phonebook_id, contacts=[])
 
 
 @phonebook_router_v1.get("/api/v1/{user_id}/{phonebook_id}/contacts/{person_id}")
-async def get_contact_person_id(user_id, phonebook_id, person_id):
+async def get_contact_person_id():
     pass
     return
 
 
 @phonebook_router_v1.get("/api/v1/{user_id}/{phonebook_id}/contacts/{last_name}")
-async def get_contact_last_name(user_id, phonebook_id, last_name):
+async def get_contact_last_name():
     pass
     return
 
 
 @phonebook_router_v1.get("/api/v1/{user_id}/{phonebook_id}/contacts/{phone_number}")
-async def get_contact_phone_number(user_id, phonebook_id, phone_number):
+async def get_contact_phone_number():
     pass
     return
 
 
 @phonebook_router_v1.post("/api/v1/{user_id}/{phonebook_id}/contacts")
-async def insert_contact(user_id, phonebook_id):
+async def post():
     pass
     return
 
 
 @phonebook_router_v1.get("/api/v1/{user_id}/{phonebook_id}/downloads")
-async def post_phone_book(user_id, phonebook_id):
+async def post_phone_book():
     file = save_file("phonebook.csv", Phonebook.contacts)
     return FileResponse(path="phonebook.csv", filename="phonebook.csv")
