@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from fastapi import APIRouter, UploadFile
 from fastapi.responses import FileResponse
+from service import phonebook_service
 
 from IO_file import save_file, read_file
 
@@ -21,41 +22,46 @@ class Phonebook(BaseModel):
     contacts: list[Person]
 
 
-@phonebook_router_v1.post("/api/v1/upload-phonebook")
-async def upload_phonebook(file: UploadFile):
-    return read_file(file.filename)
+@phonebook_router_v1.post("/api/v1/{user_id}/upload-phonebook")
+async def upload_phonebook(file: UploadFile, user_id: int):
+    return await phonebook_service.get_file(filename=file.filename, user_id=user_id)
+
+
+@phonebook_router_v1.get("/api/v1/{user_id}")
+async def get_list_phonebooks(user_id: int):
+    return await phonebook_service.get_list_phonebooks(user_id=user_id)
 
 
 @phonebook_router_v1.get("/api/v1/{user_id}/{phonebook_id}/contacts")
-async def get_phonebook(user_id, phonebook_id):
-    return Phonebook(user_id=user_id, phonebook_id=phonebook_id, contacts=[])
+async def get_contact_phonebook(user_id: int, phonebook_id: int):
+    return await phonebook_service.get_contact_phonebook(user_id=user_id, phonebook_id=phonebook_id)
 
 
 @phonebook_router_v1.get("/api/v1/{user_id}/{phonebook_id}/contacts/{person_id}")
-async def get_contact_person_id():
+async def get_contact_person_id(user_id, phonebook_id, person_id):
     pass
     return
 
 
 @phonebook_router_v1.get("/api/v1/{user_id}/{phonebook_id}/contacts/{last_name}")
-async def get_contact_last_name():
+async def get_contact_last_name(user_id, phonebook_id, last_name):
     pass
     return
 
 
 @phonebook_router_v1.get("/api/v1/{user_id}/{phonebook_id}/contacts/{phone_number}")
-async def get_contact_phone_number():
+async def get_contact_phone_number(user_id, phonebook_id, phone_number):
     pass
     return
 
 
 @phonebook_router_v1.post("/api/v1/{user_id}/{phonebook_id}/contacts")
-async def post():
+async def insert_contact(user_id, phonebook_id):
     pass
     return
 
 
 @phonebook_router_v1.get("/api/v1/{user_id}/{phonebook_id}/downloads")
-async def post_phone_book():
+async def post_phone_book(user_id, phonebook_id):
     file = save_file("phonebook.csv", Phonebook.contacts)
     return FileResponse(path="phonebook.csv", filename="phonebook.csv")
