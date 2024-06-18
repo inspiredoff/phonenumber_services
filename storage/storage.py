@@ -54,3 +54,10 @@ class PhonebookStorage:
         async with async_session() as session:
             quere = select(Contact).where(Contact.last_name == phone_number and Contact.phonebook_id == phonebook_id)
             return await session.execute(quere).scalars().all()
+
+    @staticmethod
+    async def get_contacts_by_person_id(async_session: async_session_factory, person_id: str):
+        async with async_session() as session:
+            quere = select(Contact).where(Contact.id == person_id)
+            return await session.execute(quere).scalars().all()
+

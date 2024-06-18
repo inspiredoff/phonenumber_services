@@ -38,27 +38,24 @@ async def get_contact_phonebook(user_id: int, phonebook_id: int):
 
 
 @phonebook_router_v1.get("/api/v1/{user_id}/{phonebook_id}/contacts/{person_id}")
-async def get_contact_person_id(user_id, phonebook_id, person_id):
-    pass
+async def get_contact_person_id(user_id: int, phonebook_id: int, person_id: int):
     return
 
 
 @phonebook_router_v1.get("/api/v1/{user_id}/{phonebook_id}/contacts/{last_name}")
-async def get_contact_last_name(user_id, phonebook_id, last_name):
-    pass
-    return
+async def get_contact_last_name(user_id: int, phonebook_id: int, last_name: str):
+    return await phonebook_service.get_contact_last_name(user_id=user_id, phonebook_id=phonebook_id)
 
 
 @phonebook_router_v1.get("/api/v1/{user_id}/{phonebook_id}/contacts/{phone_number}")
-async def get_contact_phone_number(user_id, phonebook_id, phone_number):
-    pass
-    return
+async def get_contact_phone_number(user_id: int, phonebook_id: int, phone_number: str):
+    return await phonebook_service.get_contact_phone_number(user_id=user_id, phonebook_id=phonebook_id,
+                                                            phone_number=phone_number)
 
 
-@phonebook_router_v1.post("/api/v1/{user_id}/{phonebook_id}/contacts")
-async def insert_contact(user_id, phonebook_id):
-    pass
-    return
+@phonebook_router_v1.post("/api/v1/{user_id}/{phonebook_id}/{contact}")
+async def insert_contact(user_id: int, phonebook_id: int, contact: Person):
+    return await phonebook_service.insert_contact(user_id=user_id, phonebook_id=phonebook_id, contact=contact)
 
 
 @phonebook_router_v1.get("/api/v1/{user_id}/{phonebook_id}/downloads")

@@ -37,7 +37,7 @@ class Service:
                 await PhonebookStorage.insert_contact(contact=contact)
 
     async def get_contact_phonebook(self, user_id: int, phonebook_id: int) -> list[Person] | str:
-        if PhonebookStorage.get_phonebooks(user_id=user_id) == phonebook_id:
+        if phonebook_id in PhonebookStorage.get_phonebooks(user_id=user_id):
             return await PhonebookStorage.get_contacts(
                 phonebook_id=phonebook_id
             )
@@ -48,7 +48,7 @@ class Service:
         return await PhonebookStorage.get_phonebooks(user_id=user_id)
 
     async def get_contact_last_name(self, user_id: int, phonebook_id: int, last_name: str) -> Person | str:
-        if PhonebookStorage.get_phonebooks(user_id=user_id) == phonebook_id:
+        if phonebook_id in PhonebookStorage.get_phonebooks(user_id=user_id):
             return await PhonebookStorage.get_contacts_by_last_name(
                 last_name=last_name,
                 phonebook_id=phonebook_id
@@ -57,11 +57,17 @@ class Service:
             return "Phonebook not found"
 
     async def get_contact_phone_number(self, user_id: int, phonebook_id: int, phone_number: str) -> str:
-        if PhonebookStorage.get_phonebooks(user_id=user_id) == phonebook_id:
+        if phonebook_id in PhonebookStorage.get_phonebooks(user_id=user_id):
             return await PhonebookStorage.get_contacts_by_phome_number(
                 phone_number=phone_number,
                 phonebook_id=phonebook_id
             )
+        else:
+            return "Phonebook not found"
+
+    async def get_contact_person_id(self, user_id: int, phonebook_id: int, person_id: int) -> Person | str:
+        if phonebook_id in PhonebookStorage.get_phonebooks(user_id=user_id):
+            return await PhonebookStorage.get_contacts_by_person_id(person_id=person_id)
         else:
             return "Phonebook not found"
 
