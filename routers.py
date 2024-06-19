@@ -53,9 +53,9 @@ async def get_contact_phone_number(user_id: int, phonebook_id: int, phone_number
                                                             phone_number=phone_number)
 
 
-@phonebook_router_v1.post("/api/v1/{user_id}/{phonebook_id}/{contact}")
-async def insert_contact(user_id: int, phonebook_id: int, contact: Person):
-    return await phonebook_service.insert_contact(user_id=user_id, phonebook_id=phonebook_id, contact=contact)
+# @phonebook_router_v1.post("/api/v1/{user_id}/{phonebook_id}/{contact}")
+# async def insert_contact(user_id: int, phonebook_id: int, contact: Person):
+#     return await phonebook_service.insert_contact(user_id=user_id, phonebook_id=phonebook_id, contact=contact)
 
 
 @phonebook_router_v1.get("/api/v1/{user_id}/{phonebook_id}/downloads")

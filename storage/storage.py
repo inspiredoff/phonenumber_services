@@ -1,8 +1,9 @@
-from database import async_session_factory
+from storage.database import async_session_factory
+# from database import async_session_factory
 from sqlalchemy.ext.asyncio import async_session
 from sqlalchemy import select
-from models import Phonebook, Contact
-from routers import Person
+from storage.models import Phonebook, Contact
+# from routers import Person
 import asyncpg
 
 
@@ -20,8 +21,8 @@ class PhonebookStorage:
             return await session.execute(quere).scalars().all()
 
     @staticmethod
-    async def insert_contact(async_session: async_session_factory, contact: [Person] or Person):
-        if type(contact) == type(Person):
+    async def insert_contact(async_session: async_session_factory, contact: [Contact] or Contact):
+        if type(contact) == type(Contact):
             data = Contact(
                 phonebook_id=contact.phonebook_id,
                 first_name=contact.first_name,
@@ -60,4 +61,3 @@ class PhonebookStorage:
         async with async_session() as session:
             quere = select(Contact).where(Contact.id == person_id)
             return await session.execute(quere).scalars().all()
-

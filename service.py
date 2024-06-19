@@ -1,4 +1,4 @@
-from routers import Phonebook, Person
+# from routers import Phonebook, Person
 from storage.storage import PhonebookStorage
 
 
@@ -16,6 +16,19 @@ from storage.storage import PhonebookStorage
 #             person = Person(list_person[0], list_person[1], list_person[2], list_person[3])
 #             print(person.__str__())
 #             await save_file("text.txt", person.__repr__())
+
+class Person:
+    phonebook_id: int
+    last_name: str
+    first_name: str
+    phone_number: str
+    info: str
+
+class Phonebook:
+    user_id: int
+    phonebook_id: int
+    contacts: list[Person]
+
 
 
 class Service:

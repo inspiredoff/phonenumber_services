@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
     AsyncAttrs,
 )
-from models import Phonebook, Contact
+# from models import Phonebook, Contact
 from sqlalchemy.orm import DeclarativeBase
 from config import dsn
 
