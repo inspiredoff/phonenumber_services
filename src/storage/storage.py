@@ -1,28 +1,51 @@
-from storage.database import async_session_factory
+from typing import List
+
+from src.storage.database import async_session_factory, Base, async_engine
 # from database import async_session_factory
-from sqlalchemy.ext.asyncio import async_session
+from sqlalchemy.ext.asyncio import async_session, AsyncSession, async_sessionmaker
 from sqlalchemy import select
-from storage.models import Phonebook, Contact
+from src.storage.models import Phonebook, Contact
 # from routers import Person
-import asyncpg
 
 
 class PhonebookStorage:
+
     @staticmethod
-    async def get_contacts(async_session: async_session_factory, phonebook_id: int):
+    async def create_table():
+        async with async_engine.begin() as session:
+            await session.run_sync(Base.metadata.drop_all)
+            await session.run_sync(Base.metadata.create_all)
+
+    @staticmethod
+    async def add_users_phonebook(async_session: async_sessionmaker[AsyncSession], user_id: int):
+        async with async_session() as session:
+            data = Phonebook(user_id=user_id)
+            session.add(data)
+            await session.commit()
+
+    @staticmethod
+    async def get_number_last_phonebook(async_session: async_sessionmaker[AsyncSession], user_id: int) -> object:
+        async with async_session() as session:
+            quere = select(Phonebook).where(Phonebook.user_id == user_id)
+            res = await session.execute(quere)
+            result = res.scalars().all()[-1]
+        return result.phonebook_id
+    @staticmethod
+    async def get_contacts(async_session: async_sessionmaker[AsyncSession], phonebook_id: int):
         async with async_session() as session:
             quere = select(Contact).where(Contact.phonebook_id == phonebook_id)
             return await session.execute(quere).scalars().all()
 
     @staticmethod
-    async def get_phonebooks(async_session: async_session_factory, user_id: int):
+    async def get_phonebooks(async_session: async_sessionmaker[AsyncSession], user_id: int):
         async with async_session() as session:
             quere = select(Phonebook).where(Phonebook.user_id == user_id)
             return await session.execute(quere).scalars().all()
 
     @staticmethod
-    async def insert_contact(async_session: async_session_factory, contact: [Contact] or Contact):
-        if type(contact) == type(Contact):
+    async def insert_contact(async_session: async_sessionmaker[AsyncSession], contact: [Contact] or Contact):
+        print(type(contact))
+        if type(contact) != type([]):
             data = Contact(
                 phonebook_id=contact.phonebook_id,
                 first_name=contact.first_name,
@@ -33,16 +56,17 @@ class PhonebookStorage:
                 session.add(data)
             await session.commit()
         else:
-            for i in contact:
-                data = Contact(
-                    phonebook_id=i.phonebook_id,
-                    first_name=i.first_name,
-                    last_name=i.last_name,
-                    number_telephone=i.phone_number,
-                    info=i.info)
-                async with async_session() as session:
+            async with async_session() as session:
+                for i in contact:
+                    print(i)
+                    data = Contact(
+                        phonebook_id=i.phonebook_id,
+                        first_name=i.first_name,
+                        last_name=i.last_name,
+                        number_telephone=i.phone_number,
+                        info=i.info)
                     session.add(data)
-            await session.commit()
+                await session.commit()
 
     @staticmethod
     async def get_contacts_by_last_name(async_session: async_session_factory, last_name: str, phonebook_id: int):

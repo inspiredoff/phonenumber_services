@@ -5,9 +5,10 @@ from sqlalchemy.ext.asyncio import (
 )
 # from models import Phonebook, Contact
 from sqlalchemy.orm import DeclarativeBase
-from config import dsn
+from src.config import dsn
 
 async_engine = create_async_engine(url=dsn, echo=True)
+print(dsn)
 async_session_factory = async_sessionmaker(async_engine)
 
 

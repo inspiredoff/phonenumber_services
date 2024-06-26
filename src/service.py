@@ -1,5 +1,10 @@
 # from routers import Phonebook, Person
-from storage.storage import PhonebookStorage
+import dataclasses
+from dataclasses import dataclass
+
+from src.storage.storage import PhonebookStorage
+from src.storage.database import async_session_factory
+from aiofiles import open
 
 
 # async def read_file(filename):
@@ -17,6 +22,7 @@ from storage.storage import PhonebookStorage
 #             print(person.__str__())
 #             await save_file("text.txt", person.__repr__())
 
+@dataclass
 class Person:
     phonebook_id: int
     last_name: str
@@ -24,6 +30,7 @@ class Person:
     phone_number: str
     info: str
 
+@dataclass
 class Phonebook:
     user_id: int
     phonebook_id: int
@@ -32,7 +39,10 @@ class Phonebook:
 
 
 class Service:
-    async def get_file(filename: str, user_id):
+    @staticmethod
+    async def get_file(filename: str, user_id: int):
+        await PhonebookStorage.add_users_phonebook(async_session=async_session_factory, user_id=user_id)
+        phonebook_id = await PhonebookStorage.get_number_last_phonebook(async_session=async_session_factory, user_id=user_id)
         contacts = []
         async with open(file=filename, mode="r") as f:
             file_content = await f.read()
@@ -40,14 +50,14 @@ class Service:
                 if len(line) > 1:
                     person_data = [i.replace("\t", "") for i in line.split(", ")]
                     contacts.append(Person(
-                        phonebook_id=1,
+                        phonebook_id=phonebook_id,
                         last_name=person_data[0],
                         first_name=person_data[1],
                         phone_number=person_data[2],
                         info=person_data[3],
                     ))
-            for contact in contacts:
-                await PhonebookStorage.insert_contact(contact=contact)
+            await PhonebookStorage.insert_contact(async_session=async_session_factory, contact=contacts)
+        return contacts
 
     async def get_contact_phonebook(self, user_id: int, phonebook_id: int) -> list[Person] | str:
         if phonebook_id in PhonebookStorage.get_phonebooks(user_id=user_id):
