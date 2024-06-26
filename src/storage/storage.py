@@ -34,13 +34,16 @@ class PhonebookStorage:
     async def get_contacts(async_session: async_sessionmaker[AsyncSession], phonebook_id: int):
         async with async_session() as session:
             quere = select(Contact).where(Contact.phonebook_id == phonebook_id)
-            return await session.execute(quere).scalars().all()
-
+            res = await session.execute(quere)
+            result = res.scalars().all()
+        return result
     @staticmethod
     async def get_phonebooks(async_session: async_sessionmaker[AsyncSession], user_id: int):
-        async with async_session() as session:
-            quere = select(Phonebook).where(Phonebook.user_id == user_id)
-            return await session.execute(quere).scalars().all()
+        async with (async_session() as session):
+            quere = select(Phonebook.phonebook_id).where(Phonebook.user_id == user_id)
+            res =await session.execute(quere)
+            result = res.scalars().all()
+        return result
 
     @staticmethod
     async def insert_contact(async_session: async_sessionmaker[AsyncSession], contact: [Contact] or Contact):

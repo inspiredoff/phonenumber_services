@@ -60,18 +60,29 @@ class Service:
         return contacts
 
     async def get_contact_phonebook(self, user_id: int, phonebook_id: int) -> list[Person] | str:
-        if phonebook_id in PhonebookStorage.get_phonebooks(user_id=user_id):
-            return await PhonebookStorage.get_contacts(
+        if phonebook_id in await PhonebookStorage.get_phonebooks(async_session=async_session_factory, user_id=user_id):
+            contact = await PhonebookStorage.get_contacts(
+                async_session=async_session_factory,
                 phonebook_id=phonebook_id
             )
+            contact_list = []
+            for i in contact:
+                contact_list.append(Person(
+                    phonebook_id=i.phonebook_id,
+                    last_name=i.last_name,
+                    first_name=i.first_name,
+                    phone_number=i.number_telephone,
+                    info=i.info
+                ))
+            return contact_list
         else:
             return "Phonebook not found"
 
     async def get_list_phonebooks(self, user_id: int) -> list[Phonebook] | str:
-        return await PhonebookStorage.get_phonebooks(user_id=user_id)
+        return await PhonebookStorage.get_phonebooks(async_session=async_session_factory, user_id=user_id)
 
     async def get_contact_last_name(self, user_id: int, phonebook_id: int, last_name: str) -> Person | str:
-        if phonebook_id in PhonebookStorage.get_phonebooks(user_id=user_id):
+        if phonebook_id in PhonebookStorage.get_phonebooks(async_session=async_session_factory, user_id=user_id):
             return await PhonebookStorage.get_contacts_by_last_name(
                 last_name=last_name,
                 phonebook_id=phonebook_id
@@ -80,8 +91,9 @@ class Service:
             return "Phonebook not found"
 
     async def get_contact_phone_number(self, user_id: int, phonebook_id: int, phone_number: str) -> str:
-        if phonebook_id in PhonebookStorage.get_phonebooks(user_id=user_id):
+        if phonebook_id in PhonebookStorage.get_phonebooks(async_session=async_session_factory, user_id=user_id):
             return await PhonebookStorage.get_contacts_by_phome_number(
+                async_session=async_session_factory,
                 phone_number=phone_number,
                 phonebook_id=phonebook_id
             )
@@ -89,8 +101,8 @@ class Service:
             return "Phonebook not found"
 
     async def get_contact_person_id(self, user_id: int, phonebook_id: int, person_id: int) -> Person | str:
-        if phonebook_id in PhonebookStorage.get_phonebooks(user_id=user_id):
-            return await PhonebookStorage.get_contacts_by_person_id(person_id=person_id)
+        if phonebook_id in PhonebookStorage.get_phonebooks(async_session=async_session_factory, user_id=user_id):
+            return await PhonebookStorage.get_contacts_by_person_id(async_session=async_session_factory, person_id=person_id)
         else:
             return "Phonebook not found"
 
