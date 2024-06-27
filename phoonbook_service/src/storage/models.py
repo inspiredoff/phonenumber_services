@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.orm.properties import ForeignKey
-from src.storage.database import Base
+from phoonbook_service.src.storage.database import Base
 
 
 class Phonebook(Base):

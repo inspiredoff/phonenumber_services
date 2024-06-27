@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from fastapi import APIRouter, UploadFile
 from fastapi.responses import FileResponse
-from src.service import phonebook_service
+from phoonbook_service.src.service import phonebook_service
 
 
 phonebook_router_v1 = APIRouter(prefix="/phonebook")

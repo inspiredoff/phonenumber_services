@@ -1,10 +1,8 @@
-from typing import List
-
-from src.storage.database import async_session_factory, Base, async_engine
+from phoonbook_service.src.storage.database import async_session_factory, Base, async_engine
 # from database import async_session_factory
 from sqlalchemy.ext.asyncio import async_session, AsyncSession, async_sessionmaker
 from sqlalchemy import select
-from src.storage.models import Phonebook, Contact
+from phoonbook_service.src.storage.models import Phonebook, Contact
 # from routers import Person
 
 

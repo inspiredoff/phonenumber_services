@@ -1,9 +1,8 @@
 # from routers import Phonebook, Person
-import dataclasses
 from dataclasses import dataclass
 
-from src.storage.storage import PhonebookStorage
-from src.storage.database import async_session_factory
+from phoonbook_service.src.storage.storage import PhonebookStorage
+from phoonbook_service.src.storage.database import async_session_factory
 from aiofiles import open
 
 

@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import (
 )
 # from models import Phonebook, Contact
 from sqlalchemy.orm import DeclarativeBase
-from src.config import dsn
+from phoonbook_service.src.config import dsn
 
 async_engine = create_async_engine(url=dsn, echo=True)
 print(dsn)
